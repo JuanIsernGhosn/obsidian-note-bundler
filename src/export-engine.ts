@@ -1,8 +1,8 @@
 import { App, TFile } from "obsidian";
 import * as fs from "fs";
 import * as path from "path";
-import { execSync } from "child_process";
 import * as os from "os";
+import JSZip from "jszip";
 
 // ── Regex ──────────────────────────────────────────────────────────────
 const WIKILINK_RE = /(?<!!)\[\[([^\]|]+)(?:\|[^\]]+)?\]\]/g;
@@ -22,6 +22,7 @@ const NON_MD_EXTENSIONS = new Set([
 export interface ExportOptions {
 	includeRelatedAssets: boolean;
 	includeFrontmatter: boolean;
+	frontmatterExcludePattern: string;
 	depth: number;
 	zipOutput: boolean;
 }
@@ -79,26 +80,51 @@ export function classifyLinks(
 	return { notes, assets: allAssets };
 }
 
-export function extractFrontmatterLinks(content: string): Set<string> {
+export function extractFrontmatterLinks(content: string, excludePattern?: string): Set<string> {
 	const match = FRONTMATTER_RE.exec(content);
 	if (!match) return new Set();
 	const frontmatter = match[1];
 	const links = new Set<string>();
-	let inRelacionado = false;
+
+	let excludeRe: RegExp | null = null;
+	if (excludePattern && excludePattern.trim()) {
+		try {
+			excludeRe = new RegExp(excludePattern);
+		} catch {
+			// Invalid regex — ignore exclusion
+		}
+	}
+
+	let currentProperty: string | null = null;
 	for (const line of frontmatter.split("\n")) {
 		const stripped = line.trim();
-		if (stripped.startsWith("relacionado_con")) {
-			inRelacionado = true;
+
+		// Detect a new top-level property (key: ...)
+		const propMatch = stripped.match(/^([a-zA-Z_][\w-]*)\s*:/);
+		if (propMatch) {
+			currentProperty = propMatch[1];
+
+			// Check if this property should be excluded
+			if (excludeRe && excludeRe.test(currentProperty)) {
+				currentProperty = null;
+				continue;
+			}
+
+			// Extract inline wikilinks from the value part (key: [[Link]])
+			const valuePart = stripped.slice(stripped.indexOf(":") + 1);
+			for (const m of matchAll(FRONTMATTER_LINK_RE, valuePart)) {
+				links.add(m);
+			}
 			continue;
 		}
-		if (inRelacionado) {
-			if (stripped.startsWith("- ")) {
-				for (const m of matchAll(FRONTMATTER_LINK_RE, stripped)) {
-					links.add(m);
-				}
-			} else {
-				break;
+
+		// List items under current property (- [[Link]])
+		if (currentProperty && stripped.startsWith("- ")) {
+			for (const m of matchAll(FRONTMATTER_LINK_RE, stripped)) {
+				links.add(m);
 			}
+		} else if (!stripped.startsWith("- ") && !stripped.startsWith("#") && stripped !== "") {
+			currentProperty = null;
 		}
 	}
 	return links;
@@ -180,6 +206,18 @@ export class ExportEngine {
 		return { found, missing };
 	}
 
+	private addDirToZip(zip: JSZip, dirPath: string, zipPrefix: string): void {
+		for (const entry of fs.readdirSync(dirPath, { withFileTypes: true })) {
+			const fullPath = path.join(dirPath, entry.name);
+			const zipPath = `${zipPrefix}/${entry.name}`;
+			if (entry.isDirectory()) {
+				this.addDirToZip(zip, fullPath, zipPath);
+			} else {
+				zip.file(zipPath, fs.readFileSync(fullPath));
+			}
+		}
+	}
+
 	async exportNote(
 		file: TFile,
 		destDir: string,
@@ -219,7 +257,7 @@ export class ExportEngine {
 
 		// Frontmatter
 		if (options.includeFrontmatter) {
-			const fmLinks = extractFrontmatterLinks(content);
+			const fmLinks = extractFrontmatterLinks(content, options.frontmatterExcludePattern);
 			fmLinks.forEach((l) => noteLinks.add(l));
 		}
 
@@ -288,7 +326,7 @@ export class ExportEngine {
 					new Set(),
 				);
 				if (options.includeFrontmatter) {
-					extractFrontmatterLinks(relContent).forEach((l) =>
+					extractFrontmatterLinks(relContent, options.frontmatterExcludePattern).forEach((l) =>
 						childNotes.add(l),
 					);
 				}
@@ -304,8 +342,11 @@ export class ExportEngine {
 		let outputPath = dest;
 		if (options.zipOutput) {
 			const zipPath = `${dest}.zip`;
-			const parentDir = path.dirname(finalDest);
-			execSync(`cd "${parentDir}" && zip -r "${zipPath}" "${outputName}"`);
+			const zip = new JSZip();
+			this.addDirToZip(zip, finalDest, outputName);
+			const buffer = await zip.generateAsync({ type: "nodebuffer", compression: "DEFLATE" });
+			fs.mkdirSync(path.dirname(zipPath), { recursive: true });
+			fs.writeFileSync(zipPath, buffer);
 			fs.rmSync(path.dirname(finalDest), { recursive: true, force: true });
 			outputPath = zipPath;
 		}
