@@ -2,3 +2,5 @@ node_modules/
 main.js
 data.json
 *.map
+.claude/
+CLAUDE.md
