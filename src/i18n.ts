@@ -21,7 +21,9 @@ const en: Translations = {
 	relatedAssets: "Related assets",
 	relatedAssetsDesc: "Export assets (images, PDFs\u2026) from linked notes",
 	frontmatter: "Frontmatter links",
-	frontmatterDesc: "Include notes referenced in the relacionado_con field",
+	frontmatterDesc: "Include notes referenced in frontmatter properties",
+	frontmatterExclude: "Exclude properties",
+	frontmatterExcludeDesc: "Regex to exclude frontmatter property names (e.g. tags|aliases|cssclasses). Leave empty to include all.",
 	depth: "Depth",
 	depthDesc: "Recursion levels for linked notes",
 	zip: "ZIP",
@@ -38,7 +40,9 @@ const en: Translations = {
 	helpRelatedAssets:
 		"When enabled, assets (images, PDFs, etc.) embedded in linked notes will also be exported to _related/_assets/.",
 	helpFrontmatter:
-		"When enabled, notes referenced in the \u2018relacionado_con\u2019 YAML frontmatter field will be included as related notes.",
+		"When enabled, wikilinks ([[Note]]) found in any frontmatter property will be included as related notes. Use the exclude pattern to skip specific properties.",
+	helpFrontmatterExclude:
+		"A regex pattern matched against frontmatter property names. Matching properties are skipped when scanning for links. Example: tags|aliases|cssclasses will ignore those three fields. Leave empty to scan all properties.",
 	helpDepth:
 		"How many levels of linked notes to follow. Depth 1 = direct links only. Depth 2 = links of links, etc.",
 	helpZip:
@@ -90,7 +94,9 @@ const es: Translations = {
 	relatedAssets: "Assets de relacionadas",
 	relatedAssetsDesc: "Exportar assets (im\u00e1genes, PDFs\u2026) de las notas enlazadas",
 	frontmatter: "Enlaces frontmatter",
-	frontmatterDesc: "Incluir notas del campo relacionado_con",
+	frontmatterDesc: "Incluir notas referenciadas en las propiedades del frontmatter",
+	frontmatterExclude: "Excluir propiedades",
+	frontmatterExcludeDesc: "Regex para excluir propiedades del frontmatter (ej. tags|aliases|cssclasses). Dejar vacío para incluir todas.",
 	depth: "Profundidad",
 	depthDesc: "Niveles de recursi\u00f3n para notas enlazadas",
 	zip: "ZIP",
@@ -106,7 +112,9 @@ const es: Translations = {
 	helpRelatedAssets:
 		"Si est\u00e1 activado, los assets (im\u00e1genes, PDFs, etc.) embebidos en las notas enlazadas tambi\u00e9n se exportar\u00e1n a _related/_assets/.",
 	helpFrontmatter:
-		"Si est\u00e1 activado, las notas referenciadas en el campo YAML \u2018relacionado_con\u2019 del frontmatter se incluir\u00e1n como notas relacionadas.",
+		"Si está activado, los wikilinks ([[Nota]]) encontrados en cualquier propiedad del frontmatter se incluirán como notas relacionadas. Usa el patrón de exclusión para omitir propiedades específicas.",
+	helpFrontmatterExclude:
+		"Un patrón regex que se compara contra los nombres de las propiedades del frontmatter. Las propiedades que coincidan se omiten al buscar enlaces. Ejemplo: tags|aliases|cssclasses ignorará esos tres campos. Dejar vacío para escanear todas.",
 	helpDepth:
 		"Cu\u00e1ntos niveles de notas enlazadas seguir. Profundidad 1 = solo enlaces directos. Profundidad 2 = enlaces de enlaces, etc.",
 	helpZip:

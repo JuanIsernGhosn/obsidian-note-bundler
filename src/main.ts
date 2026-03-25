@@ -8,6 +8,7 @@ export interface ExportNoteSettings {
 	outputPath: string;
 	includeRelatedAssets: boolean;
 	includeFrontmatter: boolean;
+	frontmatterExcludePattern: string;
 	depth: number;
 	zipOutput: boolean;
 }
@@ -16,6 +17,7 @@ const DEFAULT_SETTINGS: ExportNoteSettings = {
 	outputPath: "~/Desktop",
 	includeRelatedAssets: true,
 	includeFrontmatter: false,
+	frontmatterExcludePattern: "",
 	depth: 1,
 	zipOutput: false,
 };
@@ -160,6 +162,19 @@ class ExportNoteSettingTab extends PluginSettingTab {
 					.setValue(this.plugin.settings.includeFrontmatter)
 					.onChange(async (v) => {
 						this.plugin.settings.includeFrontmatter = v;
+						await this.plugin.saveSettings();
+					}),
+			);
+
+		new Setting(containerEl)
+			.setName(t("frontmatterExclude"))
+			.setDesc(t("frontmatterExcludeDesc"))
+			.addText((text) =>
+				text
+					.setPlaceholder("tags|aliases|cssclasses")
+					.setValue(this.plugin.settings.frontmatterExcludePattern)
+					.onChange(async (v) => {
+						this.plugin.settings.frontmatterExcludePattern = v;
 						await this.plugin.saveSettings();
 					}),
 			);

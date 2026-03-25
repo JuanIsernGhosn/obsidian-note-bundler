@@ -92,6 +92,7 @@ export class HelpModal extends Modal {
 			{ name: t("outputName"), help: t("helpOutputName") },
 			{ name: t("relatedAssets"), help: t("helpRelatedAssets") },
 			{ name: t("frontmatter"), help: t("helpFrontmatter") },
+			{ name: t("frontmatterExclude"), help: t("helpFrontmatterExclude") },
 			{ name: t("depth"), help: t("helpDepth") },
 			{ name: t("zip"), help: t("helpZip") },
 		];
@@ -195,6 +196,7 @@ export class ExportModal extends Modal {
 	private outputName: string;
 	private includeRelatedAssets: boolean;
 	private includeFrontmatter: boolean;
+	private frontmatterExcludePattern: string;
 	private depth: number;
 	private zipOutput: boolean;
 
@@ -206,6 +208,7 @@ export class ExportModal extends Modal {
 		this.outputName = file.basename;
 		this.includeRelatedAssets = plugin.settings.includeRelatedAssets;
 		this.includeFrontmatter = plugin.settings.includeFrontmatter;
+		this.frontmatterExcludePattern = plugin.settings.frontmatterExcludePattern;
 		this.depth = plugin.settings.depth;
 		this.zipOutput = plugin.settings.zipOutput;
 	}
@@ -256,6 +259,16 @@ export class ExportModal extends Modal {
 			);
 
 		new Setting(contentEl)
+			.setName(t("frontmatterExclude"))
+			.setDesc(t("frontmatterExcludeDesc"))
+			.addText((text) =>
+				text
+					.setPlaceholder("tags|aliases|cssclasses")
+					.setValue(this.frontmatterExcludePattern)
+					.onChange((v) => (this.frontmatterExcludePattern = v)),
+			);
+
+		new Setting(contentEl)
 			.setName(t("depth"))
 			.setDesc(t("depthDesc"))
 			.addDropdown((dropdown) => {
@@ -292,6 +305,7 @@ export class ExportModal extends Modal {
 		this.plugin.settings.outputPath = this.outputPath;
 		this.plugin.settings.includeRelatedAssets = this.includeRelatedAssets;
 		this.plugin.settings.includeFrontmatter = this.includeFrontmatter;
+		this.plugin.settings.frontmatterExcludePattern = this.frontmatterExcludePattern;
 		this.plugin.settings.depth = this.depth;
 		this.plugin.settings.zipOutput = this.zipOutput;
 		await this.plugin.saveSettings();
@@ -303,6 +317,7 @@ export class ExportModal extends Modal {
 			const result = await engine.exportNote(this.file, baseDest, this.outputName, {
 				includeRelatedAssets: this.includeRelatedAssets,
 				includeFrontmatter: this.includeFrontmatter,
+				frontmatterExcludePattern: this.frontmatterExcludePattern,
 				depth: this.depth,
 				zipOutput: this.zipOutput,
 			});
@@ -325,6 +340,7 @@ export class BatchExportModal extends Modal {
 	private outputPath: string;
 	private includeRelatedAssets: boolean;
 	private includeFrontmatter: boolean;
+	private frontmatterExcludePattern: string;
 	private depth: number;
 	private zipOutput: boolean;
 
@@ -335,6 +351,7 @@ export class BatchExportModal extends Modal {
 		this.outputPath = plugin.settings.outputPath;
 		this.includeRelatedAssets = plugin.settings.includeRelatedAssets;
 		this.includeFrontmatter = plugin.settings.includeFrontmatter;
+		this.frontmatterExcludePattern = plugin.settings.frontmatterExcludePattern;
 		this.depth = plugin.settings.depth;
 		this.zipOutput = plugin.settings.zipOutput;
 	}
@@ -385,6 +402,16 @@ export class BatchExportModal extends Modal {
 			);
 
 		new Setting(contentEl)
+			.setName(t("frontmatterExclude"))
+			.setDesc(t("frontmatterExcludeDesc"))
+			.addText((text) =>
+				text
+					.setPlaceholder("tags|aliases|cssclasses")
+					.setValue(this.frontmatterExcludePattern)
+					.onChange((v) => (this.frontmatterExcludePattern = v)),
+			);
+
+		new Setting(contentEl)
 			.setName(t("depth"))
 			.setDesc(t("depthDesc"))
 			.addDropdown((dropdown) => {
@@ -420,6 +447,7 @@ export class BatchExportModal extends Modal {
 		this.plugin.settings.outputPath = this.outputPath;
 		this.plugin.settings.includeRelatedAssets = this.includeRelatedAssets;
 		this.plugin.settings.includeFrontmatter = this.includeFrontmatter;
+		this.plugin.settings.frontmatterExcludePattern = this.frontmatterExcludePattern;
 		this.plugin.settings.depth = this.depth;
 		this.plugin.settings.zipOutput = this.zipOutput;
 		await this.plugin.saveSettings();
@@ -429,6 +457,7 @@ export class BatchExportModal extends Modal {
 		const options: ExportOptions = {
 			includeRelatedAssets: this.includeRelatedAssets,
 			includeFrontmatter: this.includeFrontmatter,
+			frontmatterExcludePattern: this.frontmatterExcludePattern,
 			depth: this.depth,
 			zipOutput: this.zipOutput,
 		};
