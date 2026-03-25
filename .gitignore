@@ -1,6 +1,40 @@
-node_modules/
+# Build output
 main.js
-data.json
+*.js.map
 *.map
+
+# Dependencies
+node_modules/
+
+# Obsidian
+data.json
+
+# IDE / Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# TypeScript
+*.tsbuildinfo
+
+# Environment
+.env
+.env.*
+
+# Claude Code
 .claude/
 CLAUDE.md
+
+# Local scripts
+install.sh
+
+# Docs (local only)
+docs/
+
+# npm
+package-lock.json
+npm-debug.log*
