@@ -1,6 +1,30 @@
 # Obsidian Note Bundler
 
-Bundle your Obsidian notes with their linked notes and attachments into a portable folder or ZIP.
+Bundle your Obsidian notes with their linked notes and attachments into a portable folder or ZIP. The plugin walks your vault's **link graph** starting from the selected note, collecting every connected note and asset along the way.
+
+## How it works
+
+```mermaid
+graph LR
+    Project -->|"[[wikilink]]"| Design
+    Project -->|"[[wikilink]]"| Research
+    Project -->|"[[wikilink]]"| Notes
+    Project -.->|"![[embed]]"| diagram.pdf
+    Design -.->|"![[embed]]"| design.png
+    Research -->|"[[wikilink]]"| Paper
+    Research -.->|"![[embed]]"| data.csv
+
+    style Project fill:#4a9eff,color:#fff,stroke:#2a7edf
+    style Design fill:#6cc644,color:#fff,stroke:#4ca624
+    style Research fill:#6cc644,color:#fff,stroke:#4ca624
+    style Notes fill:#6cc644,color:#fff,stroke:#4ca624
+    style Paper fill:#ccc,color:#666,stroke:#aaa
+    style diagram.pdf fill:#f5a623,color:#fff,stroke:#d5861f
+    style design.png fill:#f5a623,color:#fff,stroke:#d5861f
+    style data.csv fill:#f5a623,color:#fff,stroke:#d5861f
+```
+
+> With **depth 1**, the bundle includes Project + Design, Research, Notes and their assets. Paper (depth 2) is only reached if you increase the depth setting.
 
 ## Features
 
