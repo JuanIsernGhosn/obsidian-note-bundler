@@ -1,17 +1,20 @@
 {
 	"name": "export-note",
-	"version": "2.0.0",
+	"version": "1.0.0",
 	"description": "Exporta la nota activa con sus notas enlazadas y adjuntos",
 	"main": "main.js",
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
-		"build": "node esbuild.config.mjs production"
+		"build": "node esbuild.config.mjs production",
+		"install:local": "./install.sh"
 	},
 	"devDependencies": {
+		"@types/jszip": "^3.4.0",
+		"@types/node": "^20.0.0",
 		"esbuild": "^0.25.0",
+		"jszip": "^3.10.1",
 		"obsidian": "latest",
-		"typescript": "^5.8.0",
-		"@types/node": "^20.0.0"
+		"typescript": "^5.8.0"
 	},
 	"license": "MIT"
 }

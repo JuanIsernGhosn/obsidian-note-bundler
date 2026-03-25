@@ -1,7 +1,7 @@
 {
 	"id": "obsidian-note-bundler",
 	"name": "Note Bundler",
-	"version": "2.0.0",
+	"version": "1.0.0",
 	"minAppVersion": "0.15.0",
 	"description": "Bundle a note with its linked notes and attachments into a portable folder or ZIP",
 	"authorUrl": "https://github.com/juanisernghosn",
