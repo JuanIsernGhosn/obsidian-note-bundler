@@ -26,6 +26,12 @@ graph LR
 
 > With **depth 1**, the bundle includes Project + Design, Research, Notes and their assets. Paper (depth 2) is only reached if you increase the depth setting.
 
+## Screenshots
+
+| Ribbon icon | Export modal |
+|:-----------:|:------------:|
+| ![Ribbon icon](assets/ribbon-icon.png) | ![Export modal](assets/export-modal.png) |
+
 ## Features
 
 - **Bundle active note** with all linked notes and embedded assets
