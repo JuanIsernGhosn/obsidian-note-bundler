@@ -6,19 +6,19 @@ import type ExportNotePlugin from "./main";
 // ── Styles ─────────────────────────────────────────────────────────────
 
 const STYLES = `
-.export-note-title {
+.export-note-title h2 {
+	margin: 0 0 12px 0;
+}
+.export-note-footer {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	margin-bottom: 12px;
-}
-.export-note-title h2 {
-	margin: 0;
+	margin-top: 16px;
 }
 .export-note-help-btn {
 	border-radius: 50%;
-	width: 28px;
-	height: 28px;
+	width: 32px;
+	height: 32px;
 	cursor: pointer;
 	font-weight: bold;
 	font-size: 14px;
@@ -220,14 +220,8 @@ export class ExportModal extends Modal {
 		injectStyles();
 		const { contentEl } = this;
 
-		// Title row with help button
 		const titleRow = contentEl.createDiv({ cls: "export-note-title" });
 		titleRow.createEl("h2", { text: t("modalTitle") });
-		const helpBtn = titleRow.createEl("button", {
-			text: "?",
-			cls: "export-note-help-btn",
-		});
-		helpBtn.addEventListener("click", () => new HelpModal(this.app).open());
 
 		new Setting(contentEl)
 			.setName(t("outputFolder"))
@@ -298,14 +292,21 @@ export class ExportModal extends Modal {
 				toggle.setValue(this.zipOutput).onChange((v) => (this.zipOutput = v)),
 			);
 
-		new Setting(contentEl).addButton((btn) =>
-			btn
-				.setButtonText(t("export"))
-				.setCta()
-				.onClick(async () => {
-					await this.doExport();
-				}),
-		);
+		const footer = contentEl.createDiv({ cls: "export-note-footer" });
+		const helpBtn = footer.createEl("button", {
+			text: "?",
+			cls: "export-note-help-btn",
+			attr: { "aria-label": t("help") },
+		});
+		helpBtn.addEventListener("click", () => new HelpModal(this.app).open());
+
+		const exportBtn = footer.createEl("button", {
+			text: t("export"),
+			cls: "mod-cta",
+		});
+		exportBtn.addEventListener("click", async () => {
+			await this.doExport();
+		});
 	}
 
 	onClose(): void {
@@ -380,11 +381,6 @@ export class BatchExportModal extends Modal {
 		titleRow.createEl("h2", {
 			text: `${t("modalTitleBatch")} (${this.files.length} ${t("notesSelected")})`,
 		});
-		const helpBtn = titleRow.createEl("button", {
-			text: "?",
-			cls: "export-note-help-btn",
-		});
-		helpBtn.addEventListener("click", () => new HelpModal(this.app).open());
 
 		// List selected notes
 		const list = contentEl.createEl("ul");
@@ -454,14 +450,21 @@ export class BatchExportModal extends Modal {
 				toggle.setValue(this.zipOutput).onChange((v) => (this.zipOutput = v)),
 			);
 
-		new Setting(contentEl).addButton((btn) =>
-			btn
-				.setButtonText(t("export"))
-				.setCta()
-				.onClick(async () => {
-					await this.doBatchExport();
-				}),
-		);
+		const footer = contentEl.createDiv({ cls: "export-note-footer" });
+		const helpBtn = footer.createEl("button", {
+			text: "?",
+			cls: "export-note-help-btn",
+			attr: { "aria-label": t("help") },
+		});
+		helpBtn.addEventListener("click", () => new HelpModal(this.app).open());
+
+		const exportBtn = footer.createEl("button", {
+			text: t("export"),
+			cls: "mod-cta",
+		});
+		exportBtn.addEventListener("click", async () => {
+			await this.doBatchExport();
+		});
 	}
 
 	onClose(): void {
