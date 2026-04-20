@@ -93,6 +93,7 @@ export class HelpModal extends Modal {
 			{ name: t("relatedAssets"), help: t("helpRelatedAssets") },
 			{ name: t("frontmatter"), help: t("helpFrontmatter") },
 			{ name: t("frontmatterExclude"), help: t("helpFrontmatterExclude") },
+			{ name: t("backlinks"), help: t("helpBacklinks") },
 			{ name: t("depth"), help: t("helpDepth") },
 			{ name: t("zip"), help: t("helpZip") },
 		];
@@ -197,6 +198,7 @@ export class ExportModal extends Modal {
 	private includeRelatedAssets: boolean;
 	private includeFrontmatter: boolean;
 	private frontmatterExcludePattern: string;
+	private includeBacklinks: boolean;
 	private depth: number;
 	private zipOutput: boolean;
 
@@ -209,6 +211,7 @@ export class ExportModal extends Modal {
 		this.includeRelatedAssets = plugin.settings.includeRelatedAssets;
 		this.includeFrontmatter = plugin.settings.includeFrontmatter;
 		this.frontmatterExcludePattern = plugin.settings.frontmatterExcludePattern;
+		this.includeBacklinks = plugin.settings.includeBacklinks;
 		this.depth = plugin.settings.depth;
 		this.zipOutput = plugin.settings.zipOutput;
 	}
@@ -269,6 +272,15 @@ export class ExportModal extends Modal {
 			);
 
 		new Setting(contentEl)
+			.setName(t("backlinks"))
+			.setDesc(t("backlinksDesc"))
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.includeBacklinks)
+					.onChange((v) => (this.includeBacklinks = v)),
+			);
+
+		new Setting(contentEl)
 			.setName(t("depth"))
 			.setDesc(t("depthDesc"))
 			.addDropdown((dropdown) => {
@@ -306,6 +318,7 @@ export class ExportModal extends Modal {
 		this.plugin.settings.includeRelatedAssets = this.includeRelatedAssets;
 		this.plugin.settings.includeFrontmatter = this.includeFrontmatter;
 		this.plugin.settings.frontmatterExcludePattern = this.frontmatterExcludePattern;
+		this.plugin.settings.includeBacklinks = this.includeBacklinks;
 		this.plugin.settings.depth = this.depth;
 		this.plugin.settings.zipOutput = this.zipOutput;
 		await this.plugin.saveSettings();
@@ -318,6 +331,7 @@ export class ExportModal extends Modal {
 				includeRelatedAssets: this.includeRelatedAssets,
 				includeFrontmatter: this.includeFrontmatter,
 				frontmatterExcludePattern: this.frontmatterExcludePattern,
+				includeBacklinks: this.includeBacklinks,
 				depth: this.depth,
 				zipOutput: this.zipOutput,
 			});
@@ -341,6 +355,7 @@ export class BatchExportModal extends Modal {
 	private includeRelatedAssets: boolean;
 	private includeFrontmatter: boolean;
 	private frontmatterExcludePattern: string;
+	private includeBacklinks: boolean;
 	private depth: number;
 	private zipOutput: boolean;
 
@@ -352,6 +367,7 @@ export class BatchExportModal extends Modal {
 		this.includeRelatedAssets = plugin.settings.includeRelatedAssets;
 		this.includeFrontmatter = plugin.settings.includeFrontmatter;
 		this.frontmatterExcludePattern = plugin.settings.frontmatterExcludePattern;
+		this.includeBacklinks = plugin.settings.includeBacklinks;
 		this.depth = plugin.settings.depth;
 		this.zipOutput = plugin.settings.zipOutput;
 	}
@@ -412,6 +428,15 @@ export class BatchExportModal extends Modal {
 			);
 
 		new Setting(contentEl)
+			.setName(t("backlinks"))
+			.setDesc(t("backlinksDesc"))
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.includeBacklinks)
+					.onChange((v) => (this.includeBacklinks = v)),
+			);
+
+		new Setting(contentEl)
 			.setName(t("depth"))
 			.setDesc(t("depthDesc"))
 			.addDropdown((dropdown) => {
@@ -448,6 +473,7 @@ export class BatchExportModal extends Modal {
 		this.plugin.settings.includeRelatedAssets = this.includeRelatedAssets;
 		this.plugin.settings.includeFrontmatter = this.includeFrontmatter;
 		this.plugin.settings.frontmatterExcludePattern = this.frontmatterExcludePattern;
+		this.plugin.settings.includeBacklinks = this.includeBacklinks;
 		this.plugin.settings.depth = this.depth;
 		this.plugin.settings.zipOutput = this.zipOutput;
 		await this.plugin.saveSettings();
@@ -458,6 +484,7 @@ export class BatchExportModal extends Modal {
 			includeRelatedAssets: this.includeRelatedAssets,
 			includeFrontmatter: this.includeFrontmatter,
 			frontmatterExcludePattern: this.frontmatterExcludePattern,
+			includeBacklinks: this.includeBacklinks,
 			depth: this.depth,
 			zipOutput: this.zipOutput,
 		};

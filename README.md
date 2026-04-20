@@ -94,6 +94,7 @@ Select multiple files > right-click > **Export Notes (N)**
 | Related assets | ON | Include assets from linked notes |
 | Frontmatter links | OFF | Include notes referenced in any frontmatter property |
 | Exclude properties | *(empty)* | Regex to skip frontmatter properties (e.g. `tags\|aliases\|cssclasses`) |
+| Backlinks | OFF | Include notes that link *to* the exported note(s) — expands traversal in both directions |
 | Depth | 1 | Recursion depth (1-3) |
 | ZIP | OFF | Package as `.zip` instead of folder |
 
@@ -116,7 +117,7 @@ NoteName/
 
 ## Roadmap
 
-- [ ] **Backlinks** — include notes that link *to* the bundled note(s), not just outgoing links
+- [x] ~~**Backlinks** — include notes that link *to* the bundled note(s), not just outgoing links~~
 - [x] ~~**Cross-platform ZIP** — use a JS-based ZIP library instead of macOS `zip` CLI~~
 - [ ] **Dataview queries** — extract note references from `dataview` / `dataviewjs` blocks
 - [ ] **Canvas support** — bundle `.canvas` files and the notes they contain

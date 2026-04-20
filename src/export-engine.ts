@@ -23,6 +23,7 @@ export interface ExportOptions {
 	includeRelatedAssets: boolean;
 	includeFrontmatter: boolean;
 	frontmatterExcludePattern: string;
+	includeBacklinks: boolean;
 	depth: number;
 	zipOutput: boolean;
 }
@@ -154,6 +155,21 @@ export class ExportEngine {
 		return files.find((f) => f.name === basename) ?? null;
 	}
 
+	findBacklinks(file: TFile): TFile[] {
+		const backlinks: TFile[] = [];
+		const resolved = this.app.metadataCache.resolvedLinks;
+		for (const sourcePath in resolved) {
+			if (sourcePath === file.path) continue;
+			if (resolved[sourcePath][file.path]) {
+				const src = this.app.vault.getAbstractFileByPath(sourcePath);
+				if (src instanceof TFile && src.extension === "md") {
+					backlinks.push(src);
+				}
+			}
+		}
+		return backlinks;
+	}
+
 	resolveAsset(name: string): TFile | null {
 		const files = this.app.vault.getFiles();
 
@@ -262,6 +278,13 @@ export class ExportEngine {
 			fmLinks.forEach((l) => noteLinks.add(l));
 		}
 
+		// Backlinks
+		if (options.includeBacklinks) {
+			for (const bl of this.findBacklinks(file)) {
+				noteLinks.add(bl.basename);
+			}
+		}
+
 		noteLinks.delete(file.basename);
 
 		// BFS queue
@@ -330,6 +353,11 @@ export class ExportEngine {
 					extractFrontmatterLinks(relContent, options.frontmatterExcludePattern).forEach((l) =>
 						childNotes.add(l),
 					);
+				}
+				if (options.includeBacklinks) {
+					for (const bl of this.findBacklinks(resolved)) {
+						childNotes.add(bl.basename);
+					}
 				}
 				for (const childLink of Array.from(childNotes).sort()) {
 					if (!visited.has(childLink)) {

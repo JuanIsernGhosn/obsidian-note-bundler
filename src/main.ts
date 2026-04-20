@@ -9,6 +9,7 @@ export interface ExportNoteSettings {
 	includeRelatedAssets: boolean;
 	includeFrontmatter: boolean;
 	frontmatterExcludePattern: string;
+	includeBacklinks: boolean;
 	depth: number;
 	zipOutput: boolean;
 }
@@ -18,6 +19,7 @@ const DEFAULT_SETTINGS: ExportNoteSettings = {
 	includeRelatedAssets: true,
 	includeFrontmatter: false,
 	frontmatterExcludePattern: "",
+	includeBacklinks: false,
 	depth: 1,
 	zipOutput: false,
 };
@@ -175,6 +177,18 @@ class ExportNoteSettingTab extends PluginSettingTab {
 					.setValue(this.plugin.settings.frontmatterExcludePattern)
 					.onChange(async (v) => {
 						this.plugin.settings.frontmatterExcludePattern = v;
+						await this.plugin.saveSettings();
+					}),
+			);
+
+		new Setting(containerEl)
+			.setName(t("backlinks"))
+			.setDesc(t("backlinksDesc"))
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.plugin.settings.includeBacklinks)
+					.onChange(async (v) => {
+						this.plugin.settings.includeBacklinks = v;
 						await this.plugin.saveSettings();
 					}),
 			);
