@@ -68,16 +68,17 @@ export function classifyLinks(
 	embeds: Set<string>,
 ): { notes: Set<string>; assets: Set<string> } {
 	const notes = new Set<string>();
-	const allAssets = new Set(embeds);
-	for (const link of wikilinks) {
+	const assets = new Set<string>();
+	const all = new Set([...wikilinks, ...embeds]);
+	for (const link of all) {
 		const ext = path.extname(link).toLowerCase();
 		if (NON_MD_EXTENSIONS.has(ext)) {
-			allAssets.add(link);
+			assets.add(link);
 		} else {
 			notes.add(link);
 		}
 	}
-	return { notes, assets: allAssets };
+	return { notes, assets };
 }
 
 export function extractFrontmatterLinks(content: string, excludePattern?: string): Set<string> {
