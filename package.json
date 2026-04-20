@@ -1,6 +1,6 @@
 {
 	"name": "export-note",
-	"version": "1.0.0",
+	"version": "1.1.0",
 	"description": "Exporta la nota activa con sus notas enlazadas y adjuntos",
 	"main": "main.js",
 	"scripts": {
